@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Bids History</title>
+</head>
+<body>
+<div class="w-2/3 m-auto p-5">
+  <div id="bids-data" data-amounts="<%= JSON.stringify(amounts) %>" data-timestamps="<%= JSON.stringify(timestamps) %>"></div>
+  <canvas id="myChart"></canvas>
+</div>
+
+   <script>
+ 
+    const bidsDataElement = document.getElementById('bids-data');
+    const amounts = JSON.parse(bidsDataElement.dataset.amounts);
+    const timestamps = JSON.parse(bidsDataElement.dataset.timestamps);
+
+    // Use the amounts and timestamps variables as needed
+    console.log(amounts);
+    console.log(timestamps);
+
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: timestamps,
+          datasets: [{
+            label: 'amount',
+            data: amounts,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+           
+          }
+        }
+      });
+   </script>
+</body>
+</html>
+
+

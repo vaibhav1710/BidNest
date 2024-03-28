@@ -9,35 +9,32 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  price: {
-    type: Number,
-    required: true
+  auctionEnd: {
+    type: Date // No longer marked as required
   },
-  contactNumber: {
-    type: String,
-    required: true
-  },
-  location: {
-    type: String,
-    required: true
-  },
-  photos: [{
-    photoId: {
-      type: String,
-      required: true
-    },
-    url: {
-      type: String,
-      required: true
-    }
+  bids: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bid'
   }],
-  user: {
+  seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  latestbidder:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  photoUrl: {
+    type: String,
+    required: true
+  },
+  currentBid: {
+    type: Number,
+    required:true
   }
 });
 
-const Product = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Product', productSchema);
 
-module.exports = Product;

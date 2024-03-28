@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    
+<nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo or brand name -->
+        <a href="/" class="text-white text-lg font-semibold">fBay</a>
+
+        <!-- Navbar items -->
+        <div class="flex space-x-4">
+            <!-- Ad link -->
+            <a href="/api/newads" class="text-gray-300 hover:text-white">Sell</a>
+
+            <!-- Profile link -->
+            <a href="/api/profile" class="text-gray-300 hover:text-white">Profile</a>
+
+            <!-- Logout link -->
+            <form action="/logout" method="post" class="inline">
+                <button type="submit" class="text-gray-300 hover:text-white">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<body class="bg-gray-100">
+    <div class="max-w-md mx-auto mt-10">
+        <h1 class="text-2xl font-bold mb-5">Upload Your Ad</h1>
+        <form action="/api/ads" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label for="title" class="block font-medium">Title</label>
+                <input type="text" id="title" name="title" class="form-input mt-1 block w-full" required>
+            </div>
+            <div>
+                <label for="description" class="block font-medium">Description</label>
+                <textarea id="description" name="description" rows="3" class="form-textarea mt-1 block w-full" required></textarea>
+            </div>
+            <div>
+                <label for="amount" class="block font-medium">Current Amount</label>
+                <input type="number" id="currentBid" name="currentBid" class="form-input mt-1 block w-full" required>
+            </div>
+            <div>
+                <label for="photo" class="block font-medium">Photo</label>
+                <input type="file" id="photoUrl" name="photoUrl" accept=".jpg,.png" class="form-input mt-1 block w-full" required>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit</button>
+        </form>
+    </div>
+</body>
+
+
+</body>
+</html>

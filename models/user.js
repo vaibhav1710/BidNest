@@ -3,10 +3,6 @@ const { isEmail } = require('validator');
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
     password: {
         type: String,
         required: true,
@@ -18,16 +14,6 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         validate: [isEmail, 'Invalid email address']
-    },
-    contact: {
-        type: Number,
-        required: true,
-        validate: {
-            validator: function(v) {
-                return /^[0-9]{10}$/.test(v.toString());
-            },
-            message: props => `${props.value} is not a valid phone number! Must be 10 digits.`
-        }
     },
     ads: [{
         type: mongoose.Schema.Types.ObjectId,

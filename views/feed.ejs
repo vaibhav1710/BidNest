@@ -1,0 +1,83 @@
+<!-- feed.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Feed | OLX API</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        /* Add your custom styles here if needed */
+    </style>
+</head>
+
+
+
+<nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo or brand name -->
+        <a href="/" class="text-white text-lg font-semibold">fBay</a>
+
+        <!-- Navbar items -->
+        <div class="flex space-x-4">
+            <!-- Ad link -->
+            <a href="/api/newads" class="text-gray-300 hover:text-white">Sell</a>
+
+            <!-- Profile link -->
+            <a href="/api/profile" class="text-gray-300 hover:text-white">Profile</a>
+
+            <!-- Logout link -->
+            <form action="/logout" method="post" class="inline">
+                <button type="submit" class="text-gray-300 hover:text-white">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+
+<body class="bg-gray-100">
+    <div class="container mx-auto py-6">
+        <!-- <h1 class="text-3xl font-semibold text-center text-gray-800 mb-8">Item Feed</h1> -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% items.forEach(item => { %>
+                <!-- <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <img src="<%= item.photoUrl %>" alt="<%= item.title %>" class="w-full h-48 object-cover object-center">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2"><%= item.title %></h2>
+                        <p class="text-gray-600"><%= item.description %></p>
+                        <p class="text-gray-600 mt-2">Ends At: <%= item.auctionEnd.toLocaleString() %></p>
+                        <p class="text-gray-600 mt-2">Current Bid: <%= item.currentBid %> Rs</p>
+                    </div>
+                </div> -->
+                <a href="/api/ads/<%= item._id %>" class="block bg-white shadow-md rounded-lg overflow-hidden hover:bg-gray-200 transition-colors duration-300">
+                    <img src="<%= item.photoUrl %>" alt="<%= item.title %>" class="w-full h-48 object-cover object-center">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2"><%= item.title %></h2>
+                        <p class="text-gray-600"><%= item.description %></p>
+                        <p class="text-gray-600 mt-2">Ends At: <%= item.auctionEnd.toLocaleString() %></p>
+                        <p class="text-gray-600 mt-2">Current Bid: <%= item.currentBid %> Rs</p>
+                    </div>
+                </a>
+            <% }); %>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+   
+    function calculateTimeLeft(endDate) {
+        const now = new Date();
+        const end = new Date(endDate);
+        const diff = end - now;
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        return `${days}d ${hours}h ${minutes}m`;
+    }
+</script>

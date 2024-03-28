@@ -1,10 +1,27 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+var path = require('path');
 const warner = require("./route/index");
+const ads = require("./route/ads");
 const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser'); 
 const bodyParser = require('body-parser');
+const session = require('express-session');
+
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// Use express-session middleware
+app.use(session({
+  secret: 'hellobhailog',
+  resave: true,
+  saveUninitialized: true
+}));
+
 
 app.use(express.json()); // this takes the data and attachs it to the req handler, so we can then access it req.body.something
 app.use(cookieParser()); 
@@ -27,6 +44,7 @@ connectDB();
 
 
 app.use("/",warner);
+app.use("/api" ,ads);
 
 
 const PORT =  3000;

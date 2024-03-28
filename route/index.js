@@ -3,13 +3,13 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 
 
-router.get("/", (req,res) => {
-    res.send("Hiiii");
-})
 
-router.post("/register" , userController.register);
+router.get("/", userController.getRegister);
+router.get("/login", userController.getLogin);
+router.get("/verify/:token", userController.verify);
+router.post("/" , userController.register); 
 router.post("/login" , userController.login);
-router.get("/logout", userController.logout);
+router.post("/logout", userController.logout);
 
 
 module.exports = router;
