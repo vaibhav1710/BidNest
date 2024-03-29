@@ -9,6 +9,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const bidModel = require("../models/bids");
 const {Queue} = require('bullmq');
 const {Worker} = require('bullmq');
+const client = require("../redisClient");
 
 const bidqueue = new Queue("bid-queue", 
     {connection: {
@@ -39,13 +40,13 @@ module.exports.newAd = async(req,res) => {
     let auctionEnd = new Date();
     auctionEnd.setHours(auctionEnd.getHours() + 48);
     console.log(auctionEnd);
-    console.log(req.session.userId); 
+    
     const token = req.cookies.jwt;
     const decodedToken = jwt.verify(token, process.env.SECRET);
     const {id} = decodedToken;  
     console.log(id);
     const item = await itemModel.create({
-        title: title,
+        title: title, 
         description: description,
         currentBid: currentBid,
         seller: id,
@@ -54,7 +55,10 @@ module.exports.newAd = async(req,res) => {
         auctionEnd: auctionEnd
     });
 
-    const user = await userModel.findById(id);
+    const serializeItem = item.toJSON();
+    await client.set(`item:${item._id}`, JSON.stringify(serializeItem));
+
+    const user = await userModel.findById(id); 
     user.ads.push(item._id);
     await user.save();
    
@@ -79,7 +83,7 @@ module.exports.updatebid = async(req,res) => {
        
 
         const currentTime = new Date();
-            if (currentTime <= ad.auctionEndTime) {
+            if (currentTime <= ad.auctionEnd) {
                 const newBid = await bidModel.create({
                     bidder: id,
                     amount: bidAmount,
@@ -124,7 +128,7 @@ module.exports.showBids = async(req,res) => {
             const minutes = Math.floor((diffInMillis % (1000 * 60 * 60)) / (1000 * 60));
             return `${hours}h ${minutes}m`;
         });
-        res.render("showBids", {bids,amounts,timestamps});
+        res.render("showBids", {item,bids,amounts,timestamps});
     } catch (error) {
         console.error('Error fetching bid data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -134,10 +138,19 @@ module.exports.showBids = async(req,res) => {
 
 module.exports.openAd = async(req,res) => {
     const id = req.params.id;
+    const serializedItem = await client.get(`item:${id}`);
+    console.log(serializedItem);
+    
+    if(serializedItem){
+       const ad = JSON.parse(serializedItem);
+        console.log(ad);
+        res.render("openAd",{ad});
+    }else{
     console.log(id);
     const ad = await itemModel.findById(req.params.id);
     console.log(ad);
     res.render("openAd", {ad});
+    }
 }
 
 module.exports.getnewAd = async(req,res) => {
@@ -146,7 +159,6 @@ module.exports.getnewAd = async(req,res) => {
 
 
 module.exports.feed = async(req,res) => {
-    console.log(req.session.userId);
     try{
         const items = await itemModel.find();
         items.sort((a, b) => a.auctionEnd - b.auctionEnd);

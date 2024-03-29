@@ -8,6 +8,17 @@ const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser'); 
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const cron = require('node-cron');
+const {getExpireditems} = require("./checkExpired");
+
+cron.schedule('0 * * * *', async () => {
+    try {
+        console.log("Running Script");     // Your logic to update the status of items here
+        await getExpireditems();
+    } catch (error) {
+        console.error('Error running CRON job:', error);
+    }
+});
 
 
 app.set('views', path.join(__dirname, 'views'));

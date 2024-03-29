@@ -8,7 +8,33 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <title>Bids History</title>
 </head>
-<body>
+
+<nav class="bg-gray-800 p-4">
+  <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo or brand name -->
+      <a href="/" class="text-white text-lg font-semibold">fBay</a>
+
+      <!-- Navbar items -->
+      <div class="flex space-x-4">
+          <!-- Ad link -->
+          <a href="/api/feed" class="text-gray-300 hover:text-white">Explore</a>
+
+          <a href="/api/newads" class="text-gray-300 hover:text-white">Sell</a>
+
+          <!-- Profile link -->
+          <a href="/api/profile" class="text-gray-300 hover:text-white">Profile</a>
+
+          <!-- Logout link -->
+          <form action="/logout" method="post" class="inline">
+              <button type="submit" class="text-gray-300 hover:text-white">Logout</button>
+          </form>
+      </div>
+  </div>
+</nav>
+
+
+<body class = "bg-gray-100">
+  <h1 class="m-auto p-5 text-gray-900"><%= item.title %> bidding history</h1>
 <div class="w-2/3 m-auto p-5">
   <div id="bids-data" data-amounts="<%= JSON.stringify(amounts) %>" data-timestamps="<%= JSON.stringify(timestamps) %>"></div>
   <canvas id="myChart"></canvas>

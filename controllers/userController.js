@@ -186,12 +186,10 @@ module.exports.login = async (req, res) =>{
     try {
         // Check if the token is present in the Redis cache
        const id = await client.get(email); 
-      // console.log(id);
+       console.log(id);
        
           if(id!=null){
              const token = createTokenid(id);
-            
-             console.log(req.session.userId);
              res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
              res.redirect("/api/feed");
           }else{
@@ -208,7 +206,6 @@ module.exports.login = async (req, res) =>{
             res.cookie('jwt', newToken, { httpOnly: true, maxAge: maxAge * 1000 });
             res.redirect("/api/feed");
           }
-          console.log(req.session.userId);
     } catch (err) {
         console.error('Error during login:', err);
         res.status(400).json({ error: 'Invalid credentials' });
