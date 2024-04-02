@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const mongoosastic = require('mongoose-elasticsearch-xp');
+const { Client:Client7 } = require('es7');
+const esclient = new Client7({ node: 'http://localhost:9200' });
 
 const productSchema = new mongoose.Schema({
   title: {
@@ -34,6 +37,11 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required:true
   }
+});
+
+productSchema.plugin(mongoosastic, {
+  esclient, // Elasticsearch client
+  index: 'products' // Elasticsearch index name
 });
 
 module.exports = mongoose.model('Product', productSchema);

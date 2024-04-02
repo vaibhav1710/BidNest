@@ -11,6 +11,46 @@ const {Queue} = require('bullmq');
 const {Worker} = require('bullmq');
 const client = require("../redisClient");
 
+const { Client:Client7 } = require('es7');
+const esclient = new Client7({ node: 'http://localhost:9200' });
+
+
+
+exports.searchProducts = async (req, res) => {
+    let q = req.query.q;
+    console.log(q);
+    if (q) {
+        try {
+            // Perform Elasticsearch search
+            const searchResults = await performElasticsearchSearch(q);
+            console.log(searchResults);
+            res.render("getsearch", {searchResults});
+        } catch (error) {
+            console.error('Error searching products:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // If no query parameter is provided, render the search page without search results
+        res.render('getsearch', { searchResults: [] });
+    }
+};
+
+
+async function performElasticsearchSearch(query) {
+    const { body } = await esclient.search({
+        index: 'products',
+        body: {
+            query: {
+                multi_match: {
+                    query: query,
+                    fields: ['title', 'description']
+                }
+            }
+        }
+    });
+    return body.hits.hits.map(hit => hit._source);
+}
+
 const bidqueue = new Queue("bid-queue", 
     {connection: {
     host: 'localhost', // Docker container hostname
@@ -23,6 +63,8 @@ const worker = new Worker("bid-queue", async(job) => {
     const ad = await itemModel.findById(item_id);
     ad.currentBid = bidAmount;
     ad.latestbidder = id;
+   //  console.log(io);
+   // io.emit('priceUpdate', { item_id: item_id, bidAmount: bidAmount });
     await ad.save();
 },
 {

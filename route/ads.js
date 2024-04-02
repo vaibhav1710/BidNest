@@ -13,5 +13,8 @@ router.get("/feed", isloggedin, productController.feed );
 router.get("/ads/:id", isloggedin , productController.openAd);
 router.post("/bid/:id", isloggedin, productController.updatebid);
 router.get("/ads/:id/bids", isloggedin,  productController.showBids) ; 
+router.get('/search', productController.searchProducts);
+
+
 
 module.exports = router;

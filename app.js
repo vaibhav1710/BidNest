@@ -10,6 +10,24 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cron = require('node-cron');
 const {getExpireditems} = require("./checkExpired");
+const Product = require("./models/product");
+
+const { createServer } = require('node:http');
+const { Server } = require('socket.io');
+
+const server = createServer(app);
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+    socket.on('priceUpdate', (msg) => {
+        io.emit('priceUpdate', msg);
+    });
+    console.log("Connection on ke andar");
+});
+
+
+
+
 
 cron.schedule('0 * * * *', async () => {
     try {
@@ -54,6 +72,7 @@ connectDB();
 
 
 
+
 app.use("/",warner);
 app.use("/api" ,ads);
 
@@ -62,3 +81,5 @@ const PORT =  3000;
 app.listen(PORT, () => {
     console.log(`Listning on port ${PORT}`);
 })
+
+
